@@ -287,7 +287,7 @@ UINT32 GenericBufferRead(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, BY
 #endif // end of USING_GENERIC_BUFFER_SEEK_METHOD
 
 
-
+	// sub module test
 #if (USING_GENERIC_REMOVE_LAST_BYTE_WRITTEN_METHOD == 1)
 	BOOL GenericBufferRemoveLastByteWritten(GENERIC_BUFFER* GenericBuffer, BYTE* ByteRemoved);
 #endif // end of USING_GENERIC_REMOVE_LAST_BYTE_WRITTEN_METHOD
