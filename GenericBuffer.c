@@ -441,7 +441,7 @@ UINT32 GenericBufferRead(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, BY
 		// do we even have anything in here?
 		if (GenericBuffer->BufferSize == 0)
 		{
-			return TRUE;
+			return FALSE;
 		}
 
 		// are we at the end of the buffer?
