@@ -39,8 +39,6 @@
 
 */
 
-#include "stdafx.h"
-
 #include "GenericBufferConfig.h"
 #include "GenericBuffer.h"
 
@@ -93,7 +91,7 @@ static UINT32 BufferReadToUserBuffer(GENERIC_BUFFER *GenericBuffer, UINT32 Bytes
 
 GENERIC_BUFFER *CreateGenericBuffer(GENERIC_BUFFER *GenericBuffer, UINT32 CapacityInBytes, BYTE *Buffer)
 {
-	void *TempBuffer;
+	void *TempBuffer = NULL;
 
 	#if (GENERIC_BUFFER_SAFE_MODE == 1)
 		if(CapacityInBytes < (UINT32)3)
@@ -173,6 +171,7 @@ UINT32 GenericBufferWrite(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, c
 		reached the number of bytes the user wanted us to write, go ahead and keep
 		on writing.
 	*/
+
 	while(GenericBuffer->BufferSize < (UINT32)(GenericBuffer->BufferCapacity) && BytesWritten != (UINT32)NumberOfBytes)
 	{
 		BytesWritten++;
@@ -219,7 +218,6 @@ UINT32 GenericBufferRead(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, BY
 		}
 	#endif // end of GENERIC_BUFFER_SAFE_MODE
 
-
 	BytesRead = (UINT32)BufferReadToUserBuffer(GenericBuffer, NumberOfBytes, DestinationBuffer);
 
 	if (NullTerminate == TRUE)
@@ -229,7 +227,7 @@ UINT32 GenericBufferRead(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, BY
 }
 
 #if (USING_GENERIC_BUFFER_PEEK_METHOD == 1)
-	UINT32 GenericBufferPeek(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, BYTE *DestinationBuffer, UINT32 DestinationBufferSize, BOOL NullTerminate)
+	UINT32 GenericBufferPeek(GENERIC_BUFFER *GenericBuffer, UINT32 Offset, UINT32 NumberOfBytes, BYTE *DestinationBuffer, UINT32 DestinationBufferSize, BOOL NullTerminate)
 	{
 		UINT32 BytesRead;
 		BYTE *ReadPointerMarker;
@@ -253,6 +251,9 @@ UINT32 GenericBufferRead(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, BY
 				if (NumberOfBytes + 1 > DestinationBufferSize)
 					return (UINT32)0;
 			}
+
+			if (Offset > GenericBuffer->BufferSize)
+				return 0;
 		#endif // end of GENERIC_BUFFER_SAFE_MODE
 
 		/*
@@ -261,6 +262,14 @@ UINT32 GenericBufferRead(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, BY
 		*/
 		ReadPointerMarker = (BYTE*)(GenericBuffer->CurrentReadPosition);
 		BuffersSize = (UINT32)(GenericBuffer->BufferSize);
+
+		for (BytesRead = 0; BytesRead < Offset; BytesRead++)
+		{
+			ReadPointerMarker++;
+
+			if ((UINT32)ReadPointerMarker == ((UINT32)(GenericBuffer->Buffer) + (UINT32)(GenericBuffer->BufferCapacity)))
+				ReadPointerMarker = (BYTE*)(GenericBuffer->Buffer);
+		}
 
 		/*
 			Read in the data to the user buffer.
@@ -420,6 +429,40 @@ UINT32 GenericBufferRead(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, BY
 		return (UINT32)0;
 	}
 #endif // end of USING_GENERIC_BUFFER_SEEK_METHOD
+
+#if (USING_GENERIC_REMOVE_LAST_BYTE_WRITTEN_METHOD == 1)
+	BOOL GenericBufferRemoveLastByteWritten(GENERIC_BUFFER* GenericBuffer, BYTE* ByteRemoved)
+	{
+		#if (GENERIC_BUFFER_SAFE_MODE == 1)
+			if (GenericBufferIsNull(GenericBuffer))
+				return FALSE;
+		#endif // end of GENERIC_BUFFER_SAFE_MODE
+
+		// do we even have anything in here?
+		if (GenericBuffer->BufferSize == 0)
+		{
+			return TRUE;
+		}
+
+		// are we at the end of the buffer?
+		if (GenericBuffer->CurrentWritePosition == GenericBuffer->Buffer)
+			GenericBuffer->CurrentWritePosition = &GenericBuffer->Buffer[GenericBuffer->BufferCapacity - 1];
+		else
+			GenericBuffer->CurrentWritePosition--;
+
+		// now decrease the size
+		GenericBuffer->BufferSize--;
+
+		// now get the data if they passed in a valid pointer
+		if (ByteRemoved != NULL)
+			*ByteRemoved = *GenericBuffer->CurrentWritePosition;
+
+		// now clear out the byte
+		*GenericBuffer->CurrentWritePosition = 0;
+
+		return TRUE;
+	}
+#endif // end of USING_GENERIC_REMOVE_LAST_BYTE_WRITTEN_METHOD
 
 #if (USING_GENERIC_BUFFER_FLUSH_METHOD == 1)
 	BOOL GenericBufferFlush(GENERIC_BUFFER *GenericBuffer)

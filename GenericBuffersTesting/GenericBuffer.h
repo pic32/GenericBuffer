@@ -176,6 +176,7 @@ UINT32 GenericBufferRead(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, BY
 /**
 		* @brief Peeks at a GENERIC_BUFFER.  The GENERIC_BUFFER remains unchanged.  The user buffer is NULL terminated.
 		* @param *GenericBuffer - A pointer to a GENERIC_BUFFER.
+		* @param Offset - The zero based offset to start the peek from.
 		* @param NumberOfBytes - The number of bytes from the GENERIC_BUFFER that will
 		be written to BYTE *DestinationBuffer.
 		* @param DestinationBufferSize - The size of the user destination buffer in bytes.
@@ -188,7 +189,7 @@ UINT32 GenericBufferRead(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, BY
 		* @since v1.00
 */
 #if (USING_GENERIC_BUFFER_PEEK_METHOD == 1)
-	UINT32 GenericBufferPeek(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, BYTE *DestinationBuffer, UINT32 DestinationBufferSize, BOOL NullTerminate);
+	UINT32 GenericBufferPeek(GENERIC_BUFFER *GenericBuffer, UINT32 Offset, UINT32 NumberOfBytes, BYTE *DestinationBuffer, UINT32 DestinationBufferSize, BOOL NullTerminate);
 #endif // end of USING_GENERIC_BUFFER_PEEK_METHOD
 
 	/*
@@ -284,6 +285,15 @@ UINT32 GenericBufferRead(GENERIC_BUFFER *GenericBuffer, UINT32 NumberOfBytes, BY
 #if (USING_GENERIC_BUFFER_SEEK_METHOD == 1)
 	UINT32 GenericBufferSeek(GENERIC_BUFFER *GenericBuffer, BYTE Character);
 #endif // end of USING_GENERIC_BUFFER_SEEK_METHOD
+
+
+
+#if (USING_GENERIC_REMOVE_LAST_BYTE_WRITTEN_METHOD == 1)
+	BOOL GenericBufferRemoveLastByteWritten(GENERIC_BUFFER* GenericBuffer, BYTE* ByteRemoved);
+#endif // end of USING_GENERIC_REMOVE_LAST_BYTE_WRITTEN_METHOD
+
+
+
 
 /*
 	Function: BOOL GenericBufferFlush(GENERIC_BUFFER *GenericBuffer)

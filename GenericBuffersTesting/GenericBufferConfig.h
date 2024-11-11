@@ -48,6 +48,12 @@ GenericBufferContains() method.
 #define USING_GENERIC_BUFFER_SEEK_METHOD					1
 
 /**
+Set USING_GENERIC_REMOVE_LAST_BYTE_WRITTEN_METHOD to 1 to enable
+GenericBufferRemoveLastByteWritten() method.
+*/
+#define USING_GENERIC_REMOVE_LAST_BYTE_WRITTEN_METHOD		1
+
+/**
 	*Set USING_GENERIC_BUFFER_FLUSH_METHOD to 1 to enable the
 	GenericBufferFlush() method.
 */
@@ -82,7 +88,7 @@ GenericBufferContains() method.
 	GenericBufferGetLibraryVersion() method.
 */
 
-#define USING_GENERIC_BUFFER_GET_LIBRARY_VERSION			1
+#define USING_GENERIC_BUFFER_GET_LIBRARY_VERSION			0
 
 /**
 	*Set GENERIC_BUFFER_SAFE_MODE to 1 to enable the portions of code
