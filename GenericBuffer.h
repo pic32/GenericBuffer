@@ -13,13 +13,6 @@
 	their declaration.
 */
 
-/*! \mainpage GenericBuffer Library
- *  \brief This is a Library written in C for manipulating a GenericBuffer Data Structure.
- *  \author Benjamin Michaud
- *  \version 1.07
- *  \date   January 17, 2022
- */
-
 #ifndef GENERIC_BUFFER_H
 	#define GENERIC_BUFFER_H
 
