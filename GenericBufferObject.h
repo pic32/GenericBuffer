@@ -1,5 +1,5 @@
 /*
-	Developer: Benjamin Michaud
+	Developer: brodie
 	Date: January 17, 2022
 	File Name: GenericBufferObject.h
 	Version: 1.07

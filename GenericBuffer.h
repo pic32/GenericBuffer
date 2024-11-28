@@ -1,5 +1,9 @@
+/** \file
+ * This file contains all the methods to interact with a \ref GENERIC_BUFFER.
+ */
+
 /*
-	Developer: Benjamin Michaud
+	Developer: brodie
 	Date: January 17, 2022
 	File Name: GenericBuffer.h
 	Version: 1.07
@@ -61,7 +65,7 @@
 		not be allocated, returns a NULL GENERIC_BUFFER pointer.
 		* @note None.
 		* @sa BufferMemAlloc()
-		* @since v1.0
+		* @since v1.00
 */
 GENERIC_BUFFER *CreateGenericBuffer(GENERIC_BUFFER *GenericBuffer, UINT32 CapacityInBytes, BYTE *Buffer);
 
